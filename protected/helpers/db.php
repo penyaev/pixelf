@@ -86,7 +86,7 @@ function query($query, $types = null, $params = array()) {
             $executeResult = mysqli_stmt_execute($statement);
             if ($executeResult) {
                 /** @noinspection PhpVoidFunctionResultUsedInspection */
-                $result = mysqli_stmt_get_result($statement);
+                $result = \mysqli_stmt_get_result($statement);
             }
         }
     } else {
