@@ -70,14 +70,14 @@ var realtimeGraphs = function () {
         if (!cubism_initialized) {
             steps_to_load = stats_size; // в первый раз загружаем все данные что есть, потом маленькими кусочками
         }
-        var since = Math.round((new Date()).getTime()/1000)-steps_to_load*stats_step/1000;
+        var since = -steps_to_load*stats_step/1000;
         $.getJSON(stats_url, {
             since: since,
             step: stats_step/1000,
             sites_ids: sites_ids
         }, function (json) {
             values = json;
-            values_since = since;
+            values_since = Math.round((new Date()).getTime()/1000)+since;
 
             if (!cubism_initialized) {
                 cubism_initialize();

@@ -32,6 +32,8 @@ function action_index() {
 
 function action_stats() {
     $since = intval($_GET['since']);
+    if ($since < 0)
+        $since += time();
     $users_ids = $_GET['sites_ids'];
     $step = 1;
     $until = time();

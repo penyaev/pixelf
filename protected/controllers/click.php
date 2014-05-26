@@ -68,8 +68,8 @@ function action_load() {
         echo 'Please create some sites first with fill_sites';
         die;
     }
-    $delay_min = 5;
-    $delay_max = 40;
+    $delay_min = 3;
+    $delay_max = 25;
 
     $start_time = microtime(true);
     $stats_step = 1000;
@@ -78,7 +78,7 @@ function action_load() {
             $time = microtime(true)-$start_time;
             $avg_rps = number_format($stats_step/$time, 2);
             $start_time = microtime(true);
-            echo $i.' requests done within last '.number_format($time, 1).' seconds, avg rps='.$avg_rps.PHP_EOL;
+            echo $stats_step.' requests done (total '.$i.') within last '.number_format($time, 1).' seconds, avg rps='.$avg_rps.PHP_EOL;
         }
 
         $site_uid = $sites[array_rand($sites)]['site_uid'];
@@ -103,6 +103,8 @@ function render($view, $data) {
 
 function action_overallstats() {
     $since = intval($_GET['since']);
+    if ($since < 0)
+        $since += time();
     $step = 1;
     $until = time();
 
