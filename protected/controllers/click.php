@@ -56,7 +56,7 @@ function action_fill_sites() {
         $domain_name = $word_list[array_rand($word_list)];
         $tld = strtolower($domains_list[array_rand($domains_list)]);
         $domain = $domain_name.'.'.$tld;
-        \Pixelf\Models\site\insert($domain, $site_uid, rand(3,15));
+        \Pixelf\Models\site\insert($domain, $site_uid, rand(3,6));
     }
 }
 
