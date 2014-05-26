@@ -160,7 +160,7 @@ function action_overallstats() {
     }
 
     $stats = \Pixelf\Models\site\get_overall_stats($since);
-    $stats_grouped = array_combine($timeline_keys, array_fill(0, count($timeline_keys), 0));
+    $stats_grouped = array_combine($timeline_keys, count($timeline_keys) ? array_fill(0, count($timeline_keys), 0) : array());
     foreach($stats as $row) {
         $stats_grouped [strtotime($row['datekey'])] = intval($row['requests']);
     }
