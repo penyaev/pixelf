@@ -1,0 +1,8 @@
+RewriteEngine On
+RewriteBase /pixelf
+
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteRule ^(?!public)(.*\.(css|js|png|jpg|gif|otf|eot|svg|ttf|woff|crx|swf))$ public/$1 [L,QSA,NC]
+
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteRule ^(?!public)(.*)$ public/index.php/$1 [L,QSA]

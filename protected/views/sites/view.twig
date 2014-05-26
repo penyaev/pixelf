@@ -1,0 +1,58 @@
+{% extends 'layouts/main.twig' %}
+{% block content %}
+    <p><a href="{{ create_url('sites/index') }}">&larr; К списку пикселей</a></p>
+    <h1>{{ site['domain'] }} <small>/ {{ site['site_uid'] }} <a href="{{ create_url('sites/edit', {site_id: site['site_id']}) }}" class="btn btn-xs"><span class="glyphicon glyphicon-edit"></span> Изменить</a> </small></h1>
+
+    <div class="realtime-graph-axis-rule realtime-graph-axis"></div>
+    <div class="realtime-graph realtime-graph-wide" data-id="{{ site['site_id'] }}" id="graph-{{ site['site_id'] }}"></div>
+    <br>
+    <div class="row">
+        <div class="col-md-4">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Хиты <small>за всё время</small></h3>
+                </div>
+                <div class="panel-body">
+                    {{ stats[site['site_id']]['total_requests']|number_format(0, '.', ' ') }}
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <a href="{{ create_url('sites/viewusers', {site_id: site['site_id'], mode: 'good'}) }}" class="btn btn-xs pull-right {{ (stats[site['site_id']]['good_users'] == 0) ? 'text-muted' : '' }}">Посмотреть &rarr;</a>
+                    <h3 class="panel-title">Заинтересованные <small>за всё время</small></h3>
+                </div>
+                <div class="panel-body">
+                    {{ stats[site['site_id']]['good_users']|number_format(0, '.', ' ') }} <small>(порог {{ site['request_threshold'] }})</small>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <a href="{{ create_url('sites/viewusers', {site_id: site['site_id'], mode: 'all'}) }}" class="btn btn-xs pull-right">Посмотреть &rarr;</a>
+                    <h3 class="panel-title">Аудитория <small>за всё время</small></h3>
+                </div>
+                <div class="panel-body">
+                    {{ stats[site['site_id']]['total_users']|number_format(0, '.', ' ') }}
+                </div>
+            </div>
+        </div>
+    </div>
+    <h3>Код отслеживания:</h3>
+    <code>
+        &lt;img src="{{ create_absolute_url('click/store', {site_uid: site['site_uid']}) }}" style="position:absolute;width:0;height:0;"&gt;
+    </code>
+
+{% endblock %}
+{% block scripts %}
+    <script type="text/javascript" src="{{ get_param('baseUrl') }}js/vendor/d3.v2.js"></script>
+    <script type="text/javascript" src="{{ get_param('baseUrl') }}js/vendor/cubism.v1.js"></script>
+    <script type="text/javascript" src="{{ get_param('baseUrl') }}js/app/realtime-graphs.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            realtimeGraphs.init([{{ site['site_id'] }}], '{{ create_url('sites/stats') }}', $('.realtime-graph').width());
+        });
+    </script>
+{% endblock %}

@@ -1,0 +1,24 @@
+{% extends 'layouts/main.twig' %}
+{% block jumbotron %}
+    <!-- Main jumbotron for a primary marketing message or call to action -->
+    <div class="jumbotron">
+        <div class="container">
+            <p>Хиты в секунду</p>
+            <div class="realtime-graph-axis-rule realtime-graph-axis"></div>
+            <div class="realtime-graph realtime-graph-wide realtime-height-120" data-id="0" id="graph-0"></div>
+        </div>
+    </div>
+{% endblock %}
+{% block content %}
+    <p><i>Всего хитов в базе данных: <b>{{ clicks_count|number_format(0, '.', ' ') }}</b></i></p>
+{% endblock %}
+{% block scripts %}
+    <script type="text/javascript" src="{{ get_param('baseUrl') }}js/vendor/d3.v2.js"></script>
+    <script type="text/javascript" src="{{ get_param('baseUrl') }}js/vendor/cubism.v1.js"></script>
+    <script type="text/javascript" src="{{ get_param('baseUrl') }}js/app/realtime-graphs.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            realtimeGraphs.init([0], '{{ create_url('click/overallstats') }}', $('.realtime-graph').width(), $('.realtime-graph').height());
+        });
+    </script>
+{% endblock %}

@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>pixelf</title>
+    <link rel="stylesheet" href="{{ get_param('baseUrl') }}css/bootstrap.min.css">
+    <link rel="stylesheet" href="{{ get_param('baseUrl') }}css/main.css">
+</head>
+    <body>
+        <div class="navbar navbar-inverse" role="navigation">
+            <div class="container">
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    <a class="navbar-brand" href="{{ create_url('') }}">pixel<sup>f</sup></a>
+                </div>
+                <div class="navbar-collapse collapse">
+                    <ul class="nav navbar-nav">
+                        <li><a href="{{ create_url('sites/index') }}">Пиксели</a></li>
+                    </ul>
+                    <form class="navbar-form navbar-right" role="form" method="get" action="{{ create_url('search/search') }}">
+                        <div class="form-group">
+                            <input type="text" placeholder="User ID / Site ID / Домен" class="form-control search-input" name="q" value="{{ search_query }}">
+                        </div>
+                        <button type="submit" class="btn btn-primary"><span class="glyphicon glyphicon-search"></span> Поиск</button>
+                    </form>
+                </div><!--/.navbar-collapse -->
+            </div>
+        </div>
+
+        {% block jumbotron %}{% endblock %}
+        <div class="container">
+            {% block content %}{% endblock %}
+
+            <hr>
+            <footer>
+                <p><a href="https://vk.com/garymoore">Илья Пеняев</a>, 2014</p>
+                <p><span class="glyphicon glyphicon-time"></span> Время обработки запроса сервером: %server_time% мс</p>
+            </footer>
+        </div> <!-- /container -->
+
+
+        <script type="text/javascript" src="{{ get_param('baseUrl') }}js/vendor/jquery-1.11.1.min.js"></script>
+        {% block scripts %}{% endblock %}
+    </body>
+</html>

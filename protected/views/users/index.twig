@@ -1,0 +1,50 @@
+{% extends 'layouts/main.twig' %}
+{% block content %}
+    <h1>Пользователи</h1>
+    <div class="realtime-graph-axis-rule"></div>
+    <table class="table valign-middle">
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>Хитов</th>
+            <th><div class="realtime-graph-axis"></div> </th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for user in counters %}
+            <tr>
+                <td><span class="glyphicon glyphicon-info-sign"></span> <a href="{{ create_url('users/view', {user_id: user['user_id']} ) }}">{{ user['user_id'] }}</a></td>
+                <td><nobr>{{ user['requests']|number_format(0, '.', ' ') }}</nobr></td>
+                <td>
+                    <div class="realtime-graph" data-id="{{ user['user_id'] }}" id="graph-{{ user['user_id'] }}"></div>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="3"><span class="glyphicon glyphicon-ban-circle"></span> <i>Пользователей пока нет</i></td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    <ul class="pagination">
+        {% if page > 1 %}
+            <li><a href="{{ create_url('users/index', {page: page-1}) }}">&laquo;</a></li>
+        {% endif %}
+        {% for page_index in 1..pages_total %}
+            <li{{ (page == page_index) ? ' class="active"' : '' }}><a href="{{ create_url('users/index', {page: page_index}) }}">{{ page_index }}</a></li>
+        {% endfor %}
+        {% if page < pages_total %}
+            <li><a href="{{ create_url('users/index', {page: page+1}) }}">&raquo;</a></li>
+        {% endif %}
+    </ul>
+{% endblock %}
+{% block scripts %}
+    <script type="text/javascript" src="{{ get_param('baseUrl') }}js/vendor/d3.v2.js"></script>
+    <script type="text/javascript" src="{{ get_param('baseUrl') }}js/vendor/cubism.v1.js"></script>
+    <script type="text/javascript" src="{{ get_param('baseUrl') }}js/app/realtime-graphs.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            realtimeGraphs.init({{ counters|keys|json_encode|raw }}, '{{ create_url('users/stats') }}', $('.realtime-graph').width(), $('.realtime-graph').height(), 5);
+        });
+    </script>
+{% endblock %}

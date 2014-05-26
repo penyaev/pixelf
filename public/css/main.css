@@ -1,0 +1,63 @@
+.realtime-graph {
+    width: 300px;
+    overflow: hidden;
+    vertical-align: middle;
+}
+
+.realtime-height-120 {
+    height:120px;
+}
+.realtime-graph .title {
+    display: none;;
+}
+.realtime-graph .value {
+    position: absolute;
+    top: 45%;
+    right: 3px;
+    font-size: 14pt;
+    color:#666;
+    text-shadow: 1px 1px 3px #ddd;
+}
+.realtime-graph .horizon {
+    position:relative;
+    font-size: 0;
+    line-height: 0;
+}
+
+.realtime-graph-wide {
+    width:100%;
+    border-top:1px solid #ddd;
+    border-bottom:1px solid #ddd;
+}
+
+table.valign-middle td {
+    vertical-align: middle;
+    line-height: 30px !important;
+}
+.jumbotron {
+    margin-top:-20px;
+}
+.navbar {
+    border-radius: 0;
+}
+
+.axis {
+    font: 10px sans-serif;
+}
+
+.axis text {
+    -webkit-transition: fill-opacity 250ms linear;
+}
+
+.axis path {
+    display: none;
+}
+
+.axis line {
+    stroke: #000;
+    shape-rendering: crispEdges;
+}
+
+.search-input {
+    width:300px !important;
+}

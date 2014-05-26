@@ -1,0 +1,47 @@
+{% extends 'layouts/main.twig' %}
+{% block content %}
+<p><a href="{{ create_url('sites/view', {site_id: site['site_id']}) }}">&larr; К пикселю домена {{ site['domain'] }}</a></p>
+<h1>{{ (mode == 'all') ? 'Все' : 'Заинтересованные' }} пользователи <small><span class="label label-success">{{ total_users }}</span></small></h1>
+<h3>{{ site['domain'] }} <small>/ {{ site['site_uid'] }} / порог: {{ site['request_threshold'] }}</small></h3>
+
+    <div class="row">
+        <div class="col-md-6">
+            <table class="table">
+                <thead>
+                <tr>
+                    <th>UID</th>
+                    <th>Запросов</th>
+                    <th>Урлов</th>
+                    <th></th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for user in users %}
+                    <tr>
+                        <td><nobr><span class="glyphicon glyphicon-info-sign"></span> <a href="{{ create_url('users/view', {user_id: user['user_id']} ) }}"> {{ user['user_id'] }}</a></nobr></td>
+                        <td>{{ user['requests']|number_format(0, '.', ' ') }}</td>
+                        <td>{{ user['unique_requests']|number_format(0, '.', ' ') }}</td>
+                        <td></td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+
+        </div>
+    </div>
+    {% if total_pages > 1 %}
+        <ul class="pagination">
+            {% if page > 1 %}
+                <li><a href="{{ create_url('sites/viewusers', {site_id: site['site_id'], mode: mode, page: page-1}) }}">&laquo;</a></li>
+            {% endif %}
+
+            {% for page_index in 1..total_pages %}
+                <li {{ (page_index == page) ? 'class="active"' : '' }}><a href="{{ create_url('sites/viewusers', {site_id: site['site_id'], mode: mode, page: page_index}) }}">{{ page_index }}</a></li>
+            {% endfor %}
+
+            {% if page < total_pages %}
+                <li><a href="{{ create_url('sites/viewusers', {site_id: site['site_id'], mode: mode, page: page+1}) }}">&raquo;</a></li>
+            {% endif %}
+        </ul>
+    {% endif %}
+{% endblock %}

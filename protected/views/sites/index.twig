@@ -1,0 +1,33 @@
+{% extends 'layouts/main.twig' %}
+{% block content %}
+
+    <div class="row">
+        <div class="col-md-6 col-md-offset-3">
+            <h1>Пиксели <small><span class="label label-success">{{ sites|length }}</span> <a href="{{ create_url('sites/edit') }}" class="btn btn-xs"><span class="glyphicon glyphicon-plus"></span> Добавить</a> </small></h1>
+            <p>
+                <input type="text" class="input-lgf form-control" placeholder="Поиск по домену или uid" id="site-search">
+            </p>
+            <div class="list-group" id="sites-list">
+            </div>
+            <p id="js-multi-hint"><span class="glyphicon glyphicon-info-sign"></span> <i>Можно выбрать несколько пикселей (мин. 2) и одновременно их мониторить</i></p>
+            <p id="js-go-multi"></p>
+        </div>
+    </div>
+{% endblock %}
+{% block scripts %}
+    <script type="text/template" id="list-item-template">
+        <a href="{{ create_url('sites/view', {site_id: ''}) }}<%= site_id %>" class="list-group-item">
+            <span class="badge"><%= site_uid %></span>
+            <%= domain %>
+            <button class="btn btn-xs btn-<%= added_for_multi ? 'success' : 'default' %> js-add-to-multi" data-site-id="<%= site_id %>" title="Добавить к мульти-мониторингу"><span class="glyphicon glyphicon-eye-<%= added_for_multi ? 'open' : 'close' %>"></span></button>
+        </a>
+    </script>
+    <script type="text/template" id="go-multi-template">
+        <a href="{{ create_url('sites/multi') }}?sites_ids[]=<%= sites_for_multi.join('&sites_ids[]=') %>" class="btn btn-success">Параллельный мониторинг <%= sites_for_multi.length %> пикс. &raquo;</a>
+    </script>
+    <script type="text/javascript" src="{{ get_param('baseUrl') }}js/vendor/underscore-min.js"></script>
+    <script type="text/javascript">
+        var sites = {{ sites|json_encode|raw }};
+    </script>
+    <script type="text/javascript" src="{{ get_param('baseUrl') }}js/app/sites-list.js"></script>
+{% endblock %}

@@ -1,0 +1,79 @@
+{% extends 'layouts/main.twig' %}
+{% block content %}
+    <h1>{{ user_id }} <small><span class="label label-success">{{ total_sites }}</span></small></h1>
+
+
+    <div class="realtime-graph-axis-rule realtime-graph-axis"></div>
+    <div class="realtime-graph realtime-graph-wide" data-id="{{ user_id }}" id="graph-{{ user_id }}"></div>
+    <br>
+    <div class="row">
+        <div class="col-md-4" style="margin-top:36px;">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Хиты <small>всего</small></h3>
+                </div>
+                <div class="panel-body">
+                    {{ counters['requests']|number_format(0, '.', ' ') }}
+                </div>
+            </div>
+
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Урлы <small>всего</small></h3>
+                </div>
+                <div class="panel-body">
+                    {{ counters['unique_requests']|number_format(0, '.', ' ') }}
+                </div>
+            </div>
+        </div>
+        <div class="col-md-8">
+            <table class="table">
+                <thead>
+                <tr>
+                    <th>Пиксель</th>
+                    <th>Запросов</th>
+                    <th>Урлов</th>
+                    <th>Порог</th>
+                    <th></th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for site in sites %}
+                    <tr {{ (site['unique_requests'] >= site['request_threshold']) ? 'class="success"' : '' }}>
+                        <td><nobr><span class="glyphicon glyphicon-info-sign"></span> <a href="{{ create_url('sites/view', {site_id: site['site_id']} ) }}"> {{ site['domain'] }} <span class="text-muted">/ {{ site['site_uid'] }}</span></a></nobr></td>
+                        <td>{{ site['requests']|number_format(0, '.', ' ') }}</td>
+                        <td>{{ site['unique_requests']|number_format(0, '.', ' ') }}</td>
+                        <td>{{ site['request_threshold']|number_format(0, '.', ' ') }}</td>
+                        <td></td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+            {% if total_pages > 1 %}
+                <ul class="pagination">
+                    {% if page > 1 %}
+                        <li><a href="{{ create_url('users/view', {user_id: user_id, page: page-1}) }}">&laquo;</a></li>
+                    {% endif %}
+
+                    {% for page_index in 1..total_pages %}
+                        <li {{ (page_index == page) ? 'class="active"' : '' }}><a href="{{ create_url('users/view', {user_id: user_id, page: page_index}) }}">{{ page_index }}</a></li>
+                    {% endfor %}
+
+                    {% if page < total_pages %}
+                        <li><a href="{{ create_url('users/view', {user_id: user_id, page: page+1}) }}">&raquo;</a></li>
+                    {% endif %}
+                </ul>
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}
+{% block scripts %}
+    <script type="text/javascript" src="{{ get_param('baseUrl') }}js/vendor/d3.v2.js"></script>
+    <script type="text/javascript" src="{{ get_param('baseUrl') }}js/vendor/cubism.v1.js"></script>
+    <script type="text/javascript" src="{{ get_param('baseUrl') }}js/app/realtime-graphs.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            realtimeGraphs.init(['{{ user_id }}'], '{{ create_url('users/stats') }}', $('.realtime-graph').width());
+        });
+    </script>
+{% endblock %}

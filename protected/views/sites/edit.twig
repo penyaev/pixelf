@@ -1,0 +1,40 @@
+{% extends 'layouts/main.twig' %}
+{% block content %}
+    <form class="form-horizontal" role="form" action="{{ create_url('sites/edit') }}" method="post">
+        {% if site.site_id %}
+            <input type="hidden" name="site_id" value="{{ site.site_id }}">
+        {% endif %}
+        <div class="form-group">
+            <label for="site_uid" class="col-sm-2 control-label">UID</label>
+            <div class="col-sm-4">
+                <input type="text" class="form-control" id="site_uid" name="site_uid" value="{{ site.site_uid }}" placeholder="Лучше руками не изменять">
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="domain" class="col-sm-2 control-label">Домен</label>
+            <div class="col-sm-4">
+                <input type="text" class="form-control" placeholder="Например, vk.com" name="domain" id="domain" value="{{ site.domain }}">
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="request_threshold" class="col-sm-2 control-label">Порог</label>
+            <div class="col-sm-2">
+                <input type="number" class="form-control" placeholder="Например, 4" name="request_threshold" id="request_threshold" value="{{ site.request_threshold }}">
+            </div>
+        </div>
+
+
+        <div class="form-group">
+            <div class="col-sm-offset-2 col-sm-10">
+                <button type="submit" class="btn btn-success"><span class="glyphicon glyphicon-ok"></span> Сохранить</button>
+                <a href="
+                {% if site.site_id %}
+                    {{ create_url('sites/view', {site_id: site.site_id}) }}
+                {% else %}
+                    {{ create_url('sites/index') }}
+                {% endif %}
+                " class="btn btn-default">Отменить</a>
+            </div>
+        </div>
+    </form>
+{% endblock %}
