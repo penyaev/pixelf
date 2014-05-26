@@ -11,6 +11,7 @@ namespace Pixelf\Config;
 
 function config() {
     return array(
+        'host' => 'localhost',
         'baseUrl' => '/pixelf/',
         'default_controller' => 'main',
         'default_action' => 'index',

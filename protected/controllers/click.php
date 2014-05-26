@@ -90,6 +90,10 @@ function action_load() {
     echo 'start'.PHP_EOL;
 
     $sites = \Pixelf\models\site\select_all(0, 20000);
+    if (empty($sites)) {
+        echo 'Please create some sites first with fill_sites';
+        die;
+    }
     $total = 6920000; // сутки под нагрузкой 80 запросов/сек
     $start_time = microtime(true);
     $stats_step = 1000;
@@ -105,7 +109,12 @@ function action_load() {
         $url = 'url'.rand(1,100000);
         $user_id = 'pfu-'.rand(1,5000);
 
-        file_get_contents('http://localhost/pixelf/click/store?pf_user_id='.$user_id.'&site_uid='.$site_uid.'&url='.$url);
+        $click_url = 'http://'.\Pixelf\Config\get_config_parameter('host').\Pixelf\Helpers\create_url('click/store', array(
+                'pf_user_id' => $user_id,
+                'site_uid' => $site_uid,
+                'url' => $url,
+            ));
+        file_get_contents($click_url);
     }
     echo 'done'.PHP_EOL;
 }
