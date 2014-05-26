@@ -9,3 +9,35 @@
 * Отображает статистику по каждому пикселю и позволяет настраивать порог срабатывания пометки "заинтересованный"
 * Отображает статистику по каждому пользователю
 * Умеет искать по всем пикселям и пользователям
+
+## Установка
+
+* Склонировать репозиторий
+* Настроить веб-сервер на отдачу всей статики (*.css|js|jpg|eot|svg|ttf|woff) из директории public/
+* Все остальные запросы реврайтить на public/index.php/$request
+* В случае apache можно взять готовый .htaccess из корня репозитория
+* Для случая nginx+php-fpm привожу типичный конфиг:
+```
+server {
+        listen 80;
+        server_name pixelf.penyaev.com;
+
+        location ~* ^.+\.(jpg|jpeg|gif|png|js|css|html|xml)$ {
+                root /home/sites/pixelf/public;
+        }
+
+        location / {
+                rewrite ^ /index.php;
+        }
+
+        location ~ ^/index.php$ {
+                root /home/sites/pixelf/public;
+                fastcgi_intercept_errors on;
+                fastcgi_pass        127.0.0.1:9000;
+                fastcgi_index       index.php;
+                fastcgi_param       SCRIPT_FILENAME $document_root$fastcgi_script_name;
+                include fastcgi_params;
+        }
+}
+```
+* Накатить дамп базы данных из sql/up.sql
