@@ -60,49 +60,25 @@ function action_fill_sites() {
     }
 }
 
-function action_fill() {
-    echo 'start'.PHP_EOL;
-
-    $sites = \Pixelf\models\site\select_all(0, 30000);
-    $rows = array();
-    $total = 6920000; // сутки под нагрузкой 80 запросов/сек
-    for ($i=1; $i <= $total; $i++) {
-        if (($i % 40000) == 0) {
-            $query = 'INSERT INTO pixel_log (site_id, url, user_id, timestamp) VALUES '.implode(',', $rows);
-            echo $i.' ('.number_format(((float)$i/$total)*100, 1).'%): inserting: ';
-
-            \Pixelf\Helpers\Db\query($query);
-
-            echo 'done'.PHP_EOL;
-            $rows = array();
-        }
-
-        $site_id = array_rand($sites);
-        $url = 'url'.rand(1,50);
-        $user_id = 'u'.rand(1,5000);
-
-        $rows []= '('.$site_id.',"'.$url.'","'.$user_id.'", "'.date('Y-m-d H:i:s', time() - rand(0, 60*60*24)).'")';
-    }
-    echo 'done'.PHP_EOL;
-}
-
 function action_load() {
-    echo 'start'.PHP_EOL;
+    echo 'Start load simulation (random delays between requests)'.PHP_EOL;
 
     $sites = \Pixelf\models\site\select_all(0, 20000);
     if (empty($sites)) {
         echo 'Please create some sites first with fill_sites';
         die;
     }
-    $total = 6920000; // сутки под нагрузкой 80 запросов/сек
+    $delay_min = 5;
+    $delay_max = 40;
+
     $start_time = microtime(true);
     $stats_step = 1000;
-    for ($i=1; $i <= $total; $i++) {
+    for ($i=1;; $i++) {
         if (($i % $stats_step) == 0) {
             $time = microtime(true)-$start_time;
             $avg_rps = number_format($stats_step/$time, 2);
             $start_time = microtime(true);
-            echo $i.' ('.number_format(((float)$i/$total)*100, 1).'%), avg rps='.$avg_rps.PHP_EOL;
+            echo $i.' requests done within last '.number_format($time, 1).' seconds, avg rps='.$avg_rps.PHP_EOL;
         }
 
         $site_uid = $sites[array_rand($sites)]['site_uid'];
@@ -114,38 +90,7 @@ function action_load() {
                 'site_uid' => $site_uid,
                 'url' => $url,
             ));
-        file_get_contents($click_url);
-    }
-    echo 'done'.PHP_EOL;
-}
-
-function action_simulate() {
-    echo 'Starting pixel hits simulation. Infinite requests with random delays'.PHP_EOL;
-
-    $delay_min = 40; //5
-    $delay_max = 2000; //300
-
-    $sites = \Pixelf\models\site\select_all(0, 1);
-    $rows = array();
-    $stats_step = 100;
-    $start_time = microtime(true);
-    for ($i=1;;$i++) {
-        $site_id = array_rand($sites);
-//        $url = 'http://'.$sites[$site_id]['domain'].'/url'.rand(1,20);
-        $url = 'url'.rand(1,50);
-        $user_id = 'u'.rand(1,5000);
-//        $user_id = 'u1';
-
-        $query = 'INSERT INTO pixel_log (site_id, url, user_id) VALUES ('.$site_id.',"'.$url.'","'.$user_id.'")';
-
-//        echo $i.': '.$site_id.' / '.$sites[$site_id]['domain'].PHP_EOL;
-        if (($i % $stats_step) == 0) {
-            $time = microtime(true)-$start_time;
-            echo $stats_step.' rows ('.$i.' total) inserted within last '.number_format($time, 2).' seconds, avg rps: '.number_format($stats_step/$time, 2).PHP_EOL;
-            $start_time = microtime(true);
-        }
-
-        \Pixelf\Helpers\Db\query($query);
+        @file_get_contents($click_url);
 
         usleep(rand($delay_min, $delay_max)*100);
     }
