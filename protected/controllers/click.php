@@ -68,8 +68,8 @@ function action_load() {
         echo 'Please create some sites first with fill_sites';
         die;
     }
-    $delay_min = 3;
-    $delay_max = 25;
+    $delay_min = 7;
+    $delay_max = 40;
 
     $start_time = microtime(true);
     $stats_step = 1000;
