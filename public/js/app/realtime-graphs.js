@@ -83,7 +83,7 @@ var realtimeGraphs = function () {
                 cubism_initialize();
             }
         }).fail(function () {
-                alert('Ошибка при загрузке данных с сервера')
+//                alert('Ошибка при загрузке данных с сервера')
             });
     }
 
