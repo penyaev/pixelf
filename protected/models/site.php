@@ -10,7 +10,7 @@ namespace Pixelf\Models\site;
 require_once dirname(__FILE__).'/../helpers/db.php';
 
 function insert($domain, $site_uid, $request_threshold) {
-    return \Pixelf\Helpers\Db\query('INSERT INTO sites (domain, site_uid, request_threshold) VALUES (?, ?, ?)', 'ssi', array(
+    return \Pixelf\Helpers\Db\insert('INSERT INTO sites (domain, site_uid, request_threshold) VALUES (?, ?, ?)', 'ssi', array(
         $domain, $site_uid, intval($request_threshold)
     ));
 }
