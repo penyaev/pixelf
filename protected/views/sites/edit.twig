@@ -23,10 +23,21 @@
             </div>
         </div>
 
+        <div class="form-group">
+            <label for="" class="col-sm-2 control-label">Офферы</label>
+            <div class="col-sm-6">
+                <div class="leads"></div>
+
+                <a class="btn btn-xs js-add-lead vcenter-xsbutton" href="#"><span class="glyphicon glyphicon-plus"></span> Добавить оффер</a>
+            </div>
+        </div>
+
 
         <div class="form-group">
             <div class="col-sm-offset-2 col-sm-10">
-                <button type="submit" class="btn btn-success"><span class="glyphicon glyphicon-ok"></span> Сохранить</button>
+                <div class="alert alert-danger js-alert" style="display: none;"></div>
+
+                <button type="submit" class="btn btn-success" id="js-save-button"><span class="glyphicon glyphicon-ok"></span> <span id="js-save-button-text">Сохранить</span></button>
                 <a href="
                 {% if site.site_id %}
                     {{ create_url('sites/view', {site_id: site.site_id}) }}
@@ -37,4 +48,40 @@
             </div>
         </div>
     </form>
+{% endblock %}
+{% block scripts %}
+    <script type="text/template" id="lead-template">
+        <div class="panel panel-default vk-lead">
+            <div class="panel-heading">
+                <a class="btn btn-xs pull-right vcenter-xsbutton js-remove-lead" href="#"><span class="glyphicon glyphicon-remove"></span> Удалить</a>
+                <input type="text" class="vk-lead-caption" placeholder="Заголовок. Например, &laquo;Кредитная карта онлайн&raquo;" name="leads[<%= group_id %>][caption]" id="" value="<%= caption %>">
+            </div>
+            <div class="panel-body">
+                <div class="row">
+                    <div class="col-sm-3">
+                        <label for="" class="col-sm-2 control-label">vk_lead_id</label>
+                    </div>
+                    <div class="col-sm-9">
+                        <input type="number" class="form-control vk-lead-id-input" placeholder="Например, 6513" name="leads[<%= group_id %>][id]" id="" value="<%= vk_lead_id %>">
+                    </div>
+                </div><br>
+                <div class="row">
+                    <div class="col-sm-3">
+                        <label for="" class="col-sm-2 control-label">secret</label>
+                    </div>
+                    <div class="col-sm-9">
+                        <input type="text" class="form-control" placeholder="Например, ab7c1e00f" name="leads[<%= group_id %>][secret]" id="" value="<%= secret %>">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </script>
+
+    <script type="text/javascript" src="{{ get_param('baseUrl') }}js/vendor/underscore-min.js"></script>
+    <script type="text/javascript" src="{{ get_param('baseUrl') }}js/app/tools.js"></script>
+    <script type="text/javascript" src="{{ get_param('baseUrl') }}js/app/modules/sites-edit.js"></script>
+    <script type="text/javascript">
+        var leads = {{ leads|json_encode|raw }};
+        Pixelf.Modules.SitesEdit.init(leads);
+    </script>
 {% endblock %}

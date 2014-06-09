@@ -90,3 +90,10 @@ function ref_values($arr) {
 
     return $refs;
 }
+
+function get_value($array, $key, $default = null) {
+    if (isset($array[$key]))
+        return $array[$key];
+    else
+        return $default;
+}

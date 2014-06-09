@@ -94,6 +94,20 @@ function get_users_count_for_site($site_id, $only_good = false) {
     ', 'i', array($site_id)));
 }
 
+function is_good($user_id, $site_id) {
+    $row = \Pixelf\Helpers\Db\fetch_one('
+            SELECT pixel_log.user_id,COUNT(url_id) AS requests,COUNT(DISTINCT url_id) AS unique_requests,sites.`request_threshold`
+            FROM pixel_log
+            JOIN sites ON sites.site_id=pixel_log.site_id
+            WHERE pixel_log.site_id=? AND pixel_log.user_id=?
+        ', 'is', array(
+        $site_id, $user_id
+    ));
+    if (empty($row))
+        return false;
+    return (intval(\Pixelf\Helpers\get_value($row, 'unique_requests')) >= intval(\Pixelf\Helpers\get_value($row, 'request_threshold')));
+}
+
 function get_users_count() {
     return intval(\Pixelf\Helpers\Db\fetch_value('SELECT COUNT(DISTINCT user_id) AS total_users FROM pixel_log'));
 }

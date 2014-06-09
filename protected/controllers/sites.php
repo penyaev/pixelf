@@ -13,6 +13,7 @@ require_once dirname(__FILE__).'/../controllers/main.php';
 require_once dirname(__FILE__).'/../helpers/helpers.php';
 require_once dirname(__FILE__).'/../models/site.php';
 require_once dirname(__FILE__).'/../models/user.php';
+require_once dirname(__FILE__).'/../models/lead.php';
 
 const SITES_PER_PAGE = 20;
 const USERS_PER_PAGE = 50;
@@ -53,11 +54,30 @@ function action_edit() {
         } else {
             $_POST['site_id'] = \Pixelf\Models\site\insert($_POST['domain'], $_POST['site_uid'], $_POST['request_threshold']);
         }
+
+        $leads = isset($_POST['leads']) ? $_POST['leads'] : array();
+        $existing_leads = array_keys(\Pixelf\Models\lead\get_by_site_id($_POST['site_id']));
+        $saved_leads = array();
+        foreach($leads as $lead_info) {
+            $lead_id = \Pixelf\Models\lead\insert_or_update($lead_info['caption'], $lead_info['id'], $lead_info['secret'], $_POST['site_id']);
+            if (empty($lead_id)) {
+                $saved_leads []= intval($lead_info['id']);
+            } else {
+                $saved_leads []= intval($lead_id);
+            }
+        }
+
+        $leads_to_remove = array_diff($existing_leads, $saved_leads);
+        if (!empty($leads_to_remove))
+            \Pixelf\Models\lead\delete_by_ids($leads_to_remove);
+
         \Pixelf\Helpers\redirect('sites/view', array('site_id' => $_POST['site_id']));
     }
 
+    $leads = \Pixelf\Models\lead\get_by_site_id(intval($site['site_id']));
     render('edit', array(
         'site' => $site,
+        'leads' => $leads,
     ));
 }
 
@@ -67,6 +87,7 @@ function action_view() {
         \Pixelf\Controllers\main\error(404, 'Site not found');
     }
     $stats = \Pixelf\Models\site\get_sites_requests_counts(array(intval($site['site_id'])));
+
     render('view', array(
         'site' => $site,
         'stats' => $stats,

@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
+    <meta charset="UTF-8">
     <title>pixelf</title>
     <link rel="stylesheet" href="{{ get_param('baseUrl') }}css/bootstrap.min.css">
     <link rel="stylesheet" href="{{ get_param('baseUrl') }}css/main.css">
@@ -43,6 +44,12 @@
         </div> <!-- /container -->
 
 
+        <script type="text/javascript">
+            var Pixelf = {
+                Tools: {},
+                Modules: {}
+            };
+        </script>
         <script type="text/javascript" src="{{ get_param('baseUrl') }}js/vendor/jquery-1.11.1.min.js"></script>
         {% block scripts %}{% endblock %}
     </body>

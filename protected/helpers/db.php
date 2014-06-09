@@ -19,6 +19,7 @@ function get_dbh() {
             \Pixelf\Config\get_config_parameter('db_password'),
             \Pixelf\Config\get_config_parameter('db_db')
         );
+        mysqli_query($dbh, 'SET NAMES utf8');
     }
     return $dbh;
 }
@@ -72,9 +73,13 @@ function fetch_value($query, $types = null, $params= array()) {
     return null;
 }
 
+function last_insert_id() {
+    return mysqli_insert_id(get_dbh());
+}
+
 function insert($query, $types = null, $params= array()) {
     query($query, $types, $params);
-    return mysqli_insert_id(get_dbh());
+    return last_insert_id();
 }
 
 function query($query, $types = null, $params = array()) {
