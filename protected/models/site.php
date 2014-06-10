@@ -108,7 +108,7 @@ function get_overall_stats($since) {
 
 function get_tw_stats($since) {
     $result = \Pixelf\Helpers\Db\fetch_all('
-        SELECT SUM(count) AS requests,(timestamp) AS datekey
+        SELECT AVG(count) AS requests,(timestamp) AS datekey
         FROM time_waits
         WHERE timestamp > FROM_UNIXTIME(?)
         GROUP BY datekey

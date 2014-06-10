@@ -110,6 +110,6 @@ function action_watch_tw() {
 
         \Pixelf\Helpers\Db\query('INSERT INTO time_waits (count) VALUES (?)', 'i', array($count));
         echo $count.PHP_EOL;
-        sleep(1);
+        usleep(6000);
     }
 }
