@@ -20,8 +20,8 @@ function get_dbh() {
             \Pixelf\Config\get_config_parameter('db_db')
         );
         mysqli_query($dbh, 'SET NAMES utf8');
-        mysqli_query($dbh, 'SET profiling=1');
-        mysqli_query($dbh, 'SET profiling_history_size=1');
+//        mysqli_query($dbh, 'SET profiling=1');
+//        mysqli_query($dbh, 'SET profiling_history_size=1');
     }
     return $dbh;
 }
@@ -85,7 +85,7 @@ function insert($query, $types = null, $params= array()) {
 }
 
 function query($query, $types = null, $params = array()) {
-    $start = microtime(true);
+//    $start = microtime(true);
 
     $result = false;
     if ($types && !empty($params)) {
@@ -105,15 +105,16 @@ function query($query, $types = null, $params = array()) {
         throw new \Exception('MySQL Error: '.mysqli_error(get_dbh()).'. Query was: '.$query);
     }
 
-    $time = microtime(true) - $start;
-    if ($time > 0.5) {
-        $query_id = \Pixelf\Helpers\Db\fetch_value('show profiles');
-        $profile = \Pixelf\Helpers\Db\fetch_all('show profile for query '.$query_id);
-        $data = array_map(function ($row) {
-            return $row['Status'].':'."\t".$row['Duration'];
-        }, $profile);
-        file_put_contents('/tmp/pf-profile.log', str_repeat('=', 40).PHP_EOL.'Query:'."\t".$query.PHP_EOL.implode("\n", $data).PHP_EOL.str_repeat('=', 40).PHP_EOL, FILE_APPEND);
-    }
+    // профилирование медленных запросов
+//    $time = microtime(true) - $start;
+//    if ($time > 0.5) {
+//        $query_id = \Pixelf\Helpers\Db\fetch_value('show profiles');
+//        $profile = \Pixelf\Helpers\Db\fetch_all('show profile for query '.$query_id);
+//        $data = array_map(function ($row) {
+//            return $row['Status'].':'."\t".$row['Duration'];
+//        }, $profile);
+//        file_put_contents('/tmp/pf-profile.log', str_repeat('=', 40).PHP_EOL.'Query:'."\t".$query.PHP_EOL.implode("\n", $data).PHP_EOL.str_repeat('=', 40).PHP_EOL, FILE_APPEND);
+//    }
 
     return $result;
 }

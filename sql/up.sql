@@ -5,9 +5,9 @@
 # http://www.sequelpro.com/
 # http://code.google.com/p/sequel-pro/
 #
-# Host: 127.0.0.1 (MySQL 5.6.12)
-# Database: pixel
-# Generation Time: 2014-06-10 18:28:56 +0000
+# Host: 127.0.0.1 (MySQL 5.5.34-0ubuntu0.12.04.1-log)
+# Database: pixelf
+# Generation Time: 2014-06-10 22:20:16 +0000
 # ************************************************************
 
 

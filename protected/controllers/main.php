@@ -51,12 +51,12 @@ function action_overallstats() {
     }
     $result = array('0' => array_values($stats_grouped));
 
-    $stats = \Pixelf\Models\site\get_tw_stats($since);
-    $stats_grouped = array_combine($timeline_keys, count($timeline_keys) ? array_fill(0, count($timeline_keys), 0) : array());
-    foreach($stats as $row) {
-        $stats_grouped [strtotime($row['datekey'])] = intval($row['requests']);
-    }
-    $result['1'] = array_values($stats_grouped);
+//    $stats = \Pixelf\Models\site\get_tw_stats($since);
+//    $stats_grouped = array_combine($timeline_keys, count($timeline_keys) ? array_fill(0, count($timeline_keys), 0) : array());
+//    foreach($stats as $row) {
+//        $stats_grouped [strtotime($row['datekey'])] = intval($row['requests']);
+//    }
+//    $result['1'] = array_values($stats_grouped);
 
     echo json_encode($result);
 }
