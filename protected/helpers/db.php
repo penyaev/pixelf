@@ -109,7 +109,10 @@ function query($query, $types = null, $params = array()) {
     if ($time > 0.5) {
         $query_id = \Pixelf\Helpers\Db\fetch_value('show profiles');
         $profile = \Pixelf\Helpers\Db\fetch_all('show profile for query '.$query_id);
-        file_put_contents('/tmp/pf-profile.log', str_repeat('=', 40).PHP_EOL.$query.': '.print_r($profile, true).str_repeat('=', 40).PHP_EOL, FILE_APPEND);
+        $data = array_map(function ($row) {
+            return $row['Status'].':'."\t".$row['Duration'];
+        }, $profile);
+        file_put_contents('/tmp/pf-profile.log', str_repeat('=', 40).PHP_EOL.'Query:'."\t".$query.PHP_EOL.implode("\n", $data).PHP_EOL.str_repeat('=', 40).PHP_EOL, FILE_APPEND);
     }
 
     return $result;
