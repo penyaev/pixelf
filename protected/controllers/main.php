@@ -24,9 +24,30 @@ function error($code = 500, $message = '') {
         'code' => $code,
         'message' => $message,
     ));
-    die;
 }
 
 function render($view, $data = array()) {
     \Pixelf\Helpers\render_file('main/'.$view.'.twig', $data);
+}
+
+function action_overallstats() {
+    $since = intval($_GET['since']);
+    if ($since < 0)
+        $since += time();
+    $step = 1;
+    $until = time();
+
+    $timeline_keys = array();
+    $time = $since;
+    while ($time <= $until) {
+        $timeline_keys []= intval($time);
+        $time += $step;
+    }
+
+    $stats = \Pixelf\Models\site\get_overall_stats($since);
+    $stats_grouped = array_combine($timeline_keys, count($timeline_keys) ? array_fill(0, count($timeline_keys), 0) : array());
+    foreach($stats as $row) {
+        $stats_grouped [strtotime($row['datekey'])] = intval($row['requests']);
+    }
+    echo json_encode(array('0' => array_values($stats_grouped)));
 }

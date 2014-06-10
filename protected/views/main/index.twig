@@ -18,7 +18,7 @@
     <script type="text/javascript" src="{{ get_param('baseUrl') }}js/app/realtime-graphs.js"></script>
     <script type="text/javascript">
         $(document).ready(function () {
-            realtimeGraphs.init([0], '{{ create_url('click/overallstats') }}', $('.realtime-graph').width(), $('.realtime-graph').height());
+            realtimeGraphs.init([0], '{{ create_url('main/overallstats') }}', $('.realtime-graph').width(), $('.realtime-graph').height());
         });
     </script>
 {% endblock %}

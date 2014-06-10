@@ -13,23 +13,6 @@ require_once dirname(__FILE__).'/../models/user.php';
 const USERS_PER_PAGE = 20;
 const SITES_PER_PAGE = 50;
 
-function action_index() {
-    $page = isset($_GET['page']) ? intval($_GET['page']) : 1;
-    $offset = ($page-1)*USERS_PER_PAGE;
-    $users_ids = \Pixelf\Models\user\select_all($offset, USERS_PER_PAGE);
-    $counters = \Pixelf\Models\user\get_users_requests_counts($users_ids);
-
-    $users_count = \Pixelf\Models\user\get_users_count();
-    $pages_total = ceil($users_count / USERS_PER_PAGE);
-
-
-    render('index', array(
-        'counters' => $counters,
-        'page' => $page,
-        'pages_total' => $pages_total
-    ));
-}
-
 function action_stats() {
     $since = intval($_GET['since']);
     if ($since < 0)

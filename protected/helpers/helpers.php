@@ -35,6 +35,18 @@ function get_route($request_uri) {
 }
 
 function create_url($route, $params = array()) {
+    $routeParts = explode('/', $route, 2);
+
+    $defaultAction = \Pixelf\Config\get_config_parameter('default_action');
+    if ($routeParts[1] == $defaultAction) {
+        $route = $routeParts[0].'/';
+
+        $defaultController = \Pixelf\Config\get_config_parameter('default_controller');
+        if ($routeParts[0] == $defaultController) {
+            $route = '';
+        }
+    }
+
     $url = \Pixelf\Config\get_config_parameter('baseUrl').$route;
     if (!empty($params)) {
         $url .= '?'.http_build_query($params);
@@ -97,3 +109,5 @@ function get_value($array, $key, $default = null) {
     else
         return $default;
 }
+
+class HttpException extends \Exception {}

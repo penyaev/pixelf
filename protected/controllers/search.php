@@ -21,7 +21,7 @@ function action_search() {
             }
         }
         if (strpos($q, \Pixelf\models\user\get_user_prefix()) === 0) { // looks like user uid
-            \Pixelf\helpers\redirect('users/view', array('user_uid' => $q));
+            \Pixelf\helpers\redirect('users/view', array('user_id' => $q));
         }
         $site = \Pixelf\models\site\select_by_domain($q);
         if (!empty($site)) {

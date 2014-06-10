@@ -69,16 +69,10 @@ function get_sessions_by_site_id($site_id) {
     return \Pixelf\Helpers\Db\fetch_all('SELECT * FROM sessions WHERE site_id=?', 'i', array($site_id));
 }
 
-function get_sessions_counts_by_site_id($site_id) {
+function get_sessions_stats_by_site_id($site_id) {
     return \Pixelf\Helpers\Db\fetch_all('
-        SELECT COUNT(*) AS total, vk_lead_id FROM sessions WHERE site_id=?
-        GROUP BY vk_lead_id
-    ', 'i', array($site_id), 'vk_lead_id');
-}
-
-function get_finished_sessions_counts_by_site_id($site_id) {
-    return \Pixelf\Helpers\Db\fetch_all('
-        SELECT COUNT(*) AS total, vk_lead_id FROM sessions WHERE site_id=? AND finished IS NOT NULL
+        SELECT vk_lead_id, COUNT(*) AS sessions_total, SUM(finished IS NOT NULL) AS sessions_finished  FROM sessions
+        WHERE site_id=?
         GROUP BY vk_lead_id
     ', 'i', array($site_id), 'vk_lead_id');
 }

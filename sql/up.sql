@@ -7,7 +7,7 @@
 #
 # Host: 127.0.0.1 (MySQL 5.6.12)
 # Database: pixel
-# Generation Time: 2014-06-10 15:54:06 +0000
+# Generation Time: 2014-06-10 18:28:56 +0000
 # ************************************************************
 
 
@@ -66,7 +66,7 @@ CREATE TABLE `sessions` (
   `finished` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`session_id`),
   KEY `idx_sessions` (`site_id`,`user_id`),
-  KEY `idx_sessions2` (`site_id`,`finished`)
+  KEY `idx_sessions2` (`site_id`,`vk_lead_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 

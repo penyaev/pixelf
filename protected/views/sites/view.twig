@@ -56,8 +56,8 @@
                     <tr>
                         <td>{{ lead['vk_lead_id'] }}</td>
                         <td>{{ lead['caption'] }}</td>
-                        <td>{{ sessions_total[lead['vk_lead_id']]['total']|default(0) }}</td>
-                        <td>{{ sessions_finished[lead['vk_lead_id']]['total']|default(0) }}</td>
+                        <td>{{ sessions_stats[lead['vk_lead_id']]['sessions_total']|default(0) }}</td>
+                        <td>{{ sessions_stats[lead['vk_lead_id']]['sessions_finished']|default(0) }}</td>
                     </tr>
                 {% endfor %}
             </tbody>

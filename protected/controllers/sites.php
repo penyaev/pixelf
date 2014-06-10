@@ -89,14 +89,12 @@ function action_view() {
     $stats = \Pixelf\Models\site\get_sites_requests_counts(array(intval($site['site_id'])));
 
     $leads = \Pixelf\Models\lead\get_by_site_id($site['site_id']);
-    $sessions_total = \Pixelf\Models\lead\get_sessions_counts_by_site_id($site['site_id']);
-    $sessions_finished = \Pixelf\Models\lead\get_finished_sessions_counts_by_site_id($site['site_id']);
+    $sessions_stats = \Pixelf\Models\lead\get_sessions_stats_by_site_id($site['site_id']);
 
     render('view', array(
         'site' => $site,
         'stats' => $stats,
-        'sessions_total' => $sessions_total,
-        'sessions_finished' => $sessions_finished,
+        'sessions_stats' => $sessions_stats,
         'leads' => $leads,
     ));
 }
