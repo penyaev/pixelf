@@ -20,6 +20,8 @@ function get_dbh() {
             \Pixelf\Config\get_config_parameter('db_db')
         );
         mysqli_query($dbh, 'SET NAMES utf8');
+        mysqli_query($dbh, 'SET profiling=1');
+        mysqli_query($dbh, 'SET profiling_history_size=1');
     }
     return $dbh;
 }
