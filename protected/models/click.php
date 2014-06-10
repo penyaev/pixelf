@@ -16,7 +16,8 @@ function insert($site_id, $url_id, $user_id) {
     ));
     $time = microtime(true) - $start;
     if ($time > 0.5) {
-        $profile = \Pixelf\Helpers\Db\fetch_all('show profile for query 1');
+        $query_id = \Pixelf\Helpers\Db\fetch_value('show profiles');
+        $profile = \Pixelf\Helpers\Db\fetch_all('show profile for query '.$query_id);
         file_put_contents('/tmp/pf-profile.log', print_r($profile, true), FILE_APPEND);
     }
     return $insert_id;
