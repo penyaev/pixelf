@@ -3,8 +3,11 @@
     <h1>{{ user_id }} <small><span class="label label-success">{{ total_sites }}</span></small></h1>
 
 
-    <div class="realtime-graph-axis-rule realtime-graph-axis"></div>
-    <div class="realtime-graph realtime-graph-wide" data-id="{{ user_id }}" id="graph-{{ user_id }}"></div>
+    <div class="realtime-graph-axis"></div>
+    <div class="realtime-graph-container">
+        <div class="realtime-graph realtime-graph-wide" data-id="{{ user_id }}" id="graph-{{ user_id }}"></div>
+        <div class="realtime-graph-axis-rule"></div>
+    </div>
     <br>
     <div class="row">
         <div class="col-md-4" style="margin-top:36px;">

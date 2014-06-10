@@ -3,12 +3,16 @@
     <!-- Main jumbotron for a primary marketing message or call to action -->
     <div class="jumbotron">
         <div class="container">
+
             <p>Хиты в секунду</p>
-            <div class="realtime-graph-axis-rule realtime-graph-axis"></div>
-            <div class="realtime-graph realtime-graph-wide realtime-height-120" data-id="0" id="graph-0"></div>
-            <hr>
-            <p>Количество TIME_WAIT-ов</p>
-            <div class="realtime-graph realtime-graph-wide realtime-height-120" data-id="1" id="graph-1"></div>
+            <div class="realtime-graph-axis"></div>
+            <div class="realtime-graph-container">
+                <div class="realtime-graph realtime-graph-wide realtime-height-120" data-id="0" id="graph-0"></div>
+                <hr>
+                <p>Количество TIME_WAIT-ов</p>
+                <div class="realtime-graph realtime-graph-wide realtime-height-120" data-id="1" id="graph-1"></div>
+                <div class="realtime-graph-axis-rule"></div>
+            </div>
         </div>
     </div>
 {% endblock %}

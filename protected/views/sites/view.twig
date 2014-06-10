@@ -3,8 +3,12 @@
     <p><a href="{{ create_url('sites/index') }}">&larr; К списку пикселей</a></p>
     <h1>{{ site['domain'] }} <small>/ {{ site['site_uid'] }} <a href="{{ create_url('sites/edit', {site_id: site['site_id']}) }}" class="btn btn-xs"><span class="glyphicon glyphicon-edit"></span> Изменить</a> </small></h1>
 
-    <div class="realtime-graph-axis-rule realtime-graph-axis"></div>
-    <div class="realtime-graph realtime-graph-wide" data-id="{{ site['site_id'] }}" id="graph-{{ site['site_id'] }}"></div>
+
+    <div class="realtime-graph-axis"></div>
+    <div class="realtime-graph-container">
+        <div class="realtime-graph realtime-graph-wide" data-id="{{ site['site_id'] }}" id="graph-{{ site['site_id'] }}"></div>
+        <div class="realtime-graph-axis-rule"></div>
+    </div>
     <br>
     <div class="row">
         <div class="col-md-4">
