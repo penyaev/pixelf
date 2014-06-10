@@ -41,26 +41,30 @@
         </div>
     </div>
     <h3>Офферы</h3>
-    <table class="table">
-        <thead>
-            <tr>
-                <th>ID</th>
-                <th>Заголовок</th>
-                <th>Всего сессий</th>
-                <th>Успешных</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for lead in leads %}
+    {% if leads|length %}
+        <table class="table">
+            <thead>
                 <tr>
-                    <td>{{ lead['vk_lead_id'] }}</td>
-                    <td>{{ lead['caption'] }}</td>
-                    <td>{{ sessions_total[lead['vk_lead_id']]['total']|default(0) }}</td>
-                    <td>{{ sessions_finished[lead['vk_lead_id']]['total']|default(0) }}</td>
+                    <th>ID</th>
+                    <th>Заголовок</th>
+                    <th>Всего сессий</th>
+                    <th>Успешных</th>
                 </tr>
-            {% endfor %}
-        </tbody>
-    </table>
+            </thead>
+            <tbody>
+                {% for lead in leads %}
+                    <tr>
+                        <td>{{ lead['vk_lead_id'] }}</td>
+                        <td>{{ lead['caption'] }}</td>
+                        <td>{{ sessions_total[lead['vk_lead_id']]['total']|default(0) }}</td>
+                        <td>{{ sessions_finished[lead['vk_lead_id']]['total']|default(0) }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p><span class="glyphicon glyphicon-ban-circle"></span> <i>(офферов нет)</i></p>
+    {% endif %}
     <h3>Код отслеживания:</h3>
     <code>
         &lt;img src="{{ create_absolute_url('click/store', {site_uid: site['site_uid']}) }}" style="position:absolute;width:0;height:0;"&gt;
