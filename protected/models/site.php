@@ -105,3 +105,13 @@ function get_overall_stats($since) {
     ', 'i', array($since));
     return $result;
 }
+
+function get_tw_stats($since) {
+    $result = \Pixelf\Helpers\Db\fetch_all('
+        SELECT SUM(count) AS requests,(timestamp) AS datekey
+        FROM time_waits
+        WHERE timestamp > FROM_UNIXTIME(?)
+        GROUP BY datekey
+    ', 'i', array($since));
+    return $result;
+}

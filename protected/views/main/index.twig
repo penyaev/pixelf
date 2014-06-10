@@ -6,6 +6,9 @@
             <p>Хиты в секунду</p>
             <div class="realtime-graph-axis-rule realtime-graph-axis"></div>
             <div class="realtime-graph realtime-graph-wide realtime-height-120" data-id="0" id="graph-0"></div>
+            <hr>
+            <p>Количество TIME_WAIT-ов</p>
+            <div class="realtime-graph realtime-graph-wide realtime-height-120" data-id="1" id="graph-1"></div>
         </div>
     </div>
 {% endblock %}
@@ -18,7 +21,7 @@
     <script type="text/javascript" src="{{ get_param('baseUrl') }}js/app/realtime-graphs.js"></script>
     <script type="text/javascript">
         $(document).ready(function () {
-            realtimeGraphs.init([0], '{{ create_url('main/overallstats') }}', $('.realtime-graph').width(), $('.realtime-graph').height());
+            realtimeGraphs.init([0, 1], '{{ create_url('main/overallstats') }}', $('.realtime-graph').width(), $('.realtime-graph').height());
         });
     </script>
 {% endblock %}

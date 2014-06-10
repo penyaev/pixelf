@@ -9,6 +9,7 @@
 namespace Pixelf\Controllers\test;
 
 require_once dirname(__FILE__).'/../helpers/helpers.php';
+require_once dirname(__FILE__).'/../helpers/db.php';
 require_once dirname(__FILE__).'/../models/site.php';
 require_once dirname(__FILE__).'/../models/lead.php';
 
@@ -100,4 +101,15 @@ function action_fill_sessions() {
         }
     }
     echo 'done'.PHP_EOL;
+}
+
+function action_watch_tw() {
+    echo 'Watching TIME_WAIT`s'.PHP_EOL;
+    while (true) {
+        $count = intval(trim(exec('netstat|grep TIME_WAIT|wc -l')));
+
+        \Pixelf\Helpers\Db\query('INSERT INTO time_waits (count) VALUES (?)', 'i', array($count));
+        echo $count.PHP_EOL;
+        sleep(1);
+    }
 }
