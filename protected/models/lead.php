@@ -20,6 +20,10 @@ function insert_or_update($caption, $vk_lead_id, $secret, $site_id) {
     return \Pixelf\Helpers\Db\last_insert_id();
 }
 
+function select_all() {
+    return \Pixelf\Helpers\Db\fetch_all('SELECT * FROM leads', null, array(), 'vk_lead_id');
+}
+
 function get_by_site_id($site_id) {
     return \Pixelf\Helpers\Db\fetch_all('SELECT * FROM leads WHERE site_id=?', 'i', array($site_id), 'vk_lead_id');
 }
