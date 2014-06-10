@@ -112,7 +112,13 @@ function action_watch_tw() {
         echo $count.': inserting... ';
         $time = microtime(true);
         \Pixelf\Helpers\Db\query('INSERT INTO time_waits (count) VALUES (?)', 'i', array($count));
-        echo 'done ('.number_format(microtime(true)-$time, 2).' s).'.PHP_EOL;
+        $time2 = microtime(true)-$time;
+        echo 'done ('.number_format($time2, 2).' s).';
+        if ($time2 > 1) {
+            echo ' Long insert, dumping processlist: ';
+            print_r(\Pixelf\Helpers\Db\fetch_all('SHOW FULL PROCESSLIST'));
+        }
+        echo PHP_EOL;
 
         usleep(6000);
     }
