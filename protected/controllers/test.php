@@ -108,8 +108,12 @@ function action_watch_tw() {
     while (true) {
         $count = intval(trim(exec('netstat|grep TIME_WAIT|wc -l')));
 
+
+        echo $count.': inserting... ';
+        $time = microtime(true);
         \Pixelf\Helpers\Db\query('INSERT INTO time_waits (count) VALUES (?)', 'i', array($count));
-        echo $count.PHP_EOL;
+        echo 'done ('.number_format(microtime(true)-$time, 2).' s).'.PHP_EOL;
+
         usleep(6000);
     }
 }
