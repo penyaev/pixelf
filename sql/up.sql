@@ -7,7 +7,7 @@
 #
 # Host: 127.0.0.1 (MySQL 5.6.12)
 # Database: pixel
-# Generation Time: 2014-05-26 22:22:43 +0000
+# Generation Time: 2014-06-10 15:54:06 +0000
 # ************************************************************
 
 
@@ -18,6 +18,20 @@
 /*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
+
+
+# Dump of table leads
+# ------------------------------------------------------------
+
+CREATE TABLE `leads` (
+  `vk_lead_id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `site_id` int(10) unsigned NOT NULL,
+  `caption` varchar(300) NOT NULL DEFAULT '',
+  `secret` varchar(65) NOT NULL DEFAULT '',
+  PRIMARY KEY (`vk_lead_id`),
+  KEY `idx_leads_site` (`site_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
 
 
 # Dump of table pixel_log
@@ -34,6 +48,25 @@ CREATE TABLE `pixel_log` (
   KEY `idx_group3` (`timestamp`),
   KEY `idx_group4` (`user_id`,`timestamp`),
   KEY `idx_group` (`site_id`,`user_id`,`url_id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+
+
+# Dump of table sessions
+# ------------------------------------------------------------
+
+CREATE TABLE `sessions` (
+  `session_id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `vk_sid` varchar(65) NOT NULL DEFAULT '',
+  `vk_lead_id` int(10) unsigned NOT NULL,
+  `vk_uid` int(11) unsigned NOT NULL,
+  `user_id` varchar(30) NOT NULL DEFAULT '',
+  `site_id` int(11) unsigned NOT NULL,
+  `created` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `finished` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`session_id`),
+  KEY `idx_sessions` (`site_id`,`user_id`),
+  KEY `idx_sessions2` (`site_id`,`finished`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 

@@ -47,7 +47,7 @@ function insert_session($vk_sid, $vk_lead_id, $vk_uid, $user_id, $site_id) {
 function get_open_session($user_id, $site_id) {
     return \Pixelf\Helpers\Db\fetch_value('
         SELECT session_id FROM sessions
-        WHERE user_id=? AND site_id=? AND finished IS NULL
+        WHERE site_id=? AND user_id=? AND finished IS NULL
         ORDER BY created DESC
         LIMIT 1
     ', 'si', array($user_id, $site_id));
@@ -59,4 +59,22 @@ function close_session($session_id) {
 
 function get_session_by_session_id($session_id) {
     return \Pixelf\Helpers\Db\fetch_one('SELECT * FROM sessions WHERE session_id=?', 'i', array($session_id));
+}
+
+function get_sessions_by_site_id($site_id) {
+    return \Pixelf\Helpers\Db\fetch_all('SELECT * FROM sessions WHERE site_id=?', 'i', array($site_id));
+}
+
+function get_sessions_counts_by_site_id($site_id) {
+    return \Pixelf\Helpers\Db\fetch_all('
+        SELECT COUNT(*) AS total, vk_lead_id FROM sessions WHERE site_id=?
+        GROUP BY vk_lead_id
+    ', 'i', array($site_id), 'vk_lead_id');
+}
+
+function get_finished_sessions_counts_by_site_id($site_id) {
+    return \Pixelf\Helpers\Db\fetch_all('
+        SELECT COUNT(*) AS total, vk_lead_id FROM sessions WHERE site_id=? AND finished IS NOT NULL
+        GROUP BY vk_lead_id
+    ', 'i', array($site_id), 'vk_lead_id');
 }
