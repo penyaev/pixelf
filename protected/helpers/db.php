@@ -85,6 +85,8 @@ function insert($query, $types = null, $params= array()) {
 }
 
 function query($query, $types = null, $params = array()) {
+    $start = microtime(true);
+
     $result = false;
     if ($types && !empty($params)) {
         $statement = mysqli_prepare(get_dbh(), $query);
@@ -102,5 +104,13 @@ function query($query, $types = null, $params = array()) {
     if (($result === false) && (mysqli_errno(get_dbh()))) {
         throw new \Exception('MySQL Error: '.mysqli_error(get_dbh()).'. Query was: '.$query);
     }
+
+    $time = microtime(true) - $start;
+    if ($time > 0.5) {
+        $query_id = \Pixelf\Helpers\Db\fetch_value('show profiles');
+        $profile = \Pixelf\Helpers\Db\fetch_all('show profile for query '.$query_id);
+        file_put_contents('/tmp/pf-profile.log', str_repeat('=', 40).PHP_EOL.$query.': '.print_r($profile, true).str_repeat('=', 40).PHP_EOL, FILE_APPEND);
+    }
+
     return $result;
 }
