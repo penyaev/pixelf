@@ -46,13 +46,13 @@ function action_store() {
     $url_id = \Pixelf\models\url\insert_or_get_id($url);
     \Pixelf\Models\Click\insert($site_id, $url_id, $user_id);
 
-    $session_id = handle_lead_session($url, $user_id, $site_id);
-    if (empty($session_id)) {
+    $session_id = handle_lead_session($url, $user_id, $site_id); // смотрим на реферера: возможно, надо открыть новую сессию
+    if (empty($session_id)) { // если новую сессию не открыли, то, может быть, уже есть открытая
         $session_id = \Pixelf\Models\lead\get_open_session($user_id, $site_id); // пытаемся получить открытую сессию
     }
 
     if (!empty($session_id)) { // если есть открытая сессия
-        if (\Pixelf\Models\user\is_good($user_id, $site_id)) { // если юзер удовлетворяет условиям
+        if (\Pixelf\Models\user\is_goal_reached($user_id, $site_id, $session_id)) { // если юзер удовлетворяет условиям
             \Pixelf\Helpers\leads\complete_lead($session_id);
         }
     }

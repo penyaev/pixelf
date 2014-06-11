@@ -94,14 +94,15 @@ function get_users_count_for_site($site_id, $only_good = false) {
     ', 'i', array($site_id)));
 }
 
-function is_good($user_id, $site_id) {
+function is_goal_reached($user_id, $site_id, $session_id) {
     $row = \Pixelf\Helpers\Db\fetch_one('
             SELECT pixel_log.user_id,COUNT(url_id) AS requests,COUNT(DISTINCT url_id) AS unique_requests,sites.`request_threshold`
             FROM pixel_log
             JOIN sites ON sites.site_id=pixel_log.site_id
-            WHERE pixel_log.site_id=? AND pixel_log.user_id=?
-        ', 'is', array(
-        $site_id, $user_id
+            JOIN sessions ON sessions.`session_id`=?
+            WHERE pixel_log.site_id=? AND pixel_log.user_id=? AND timestamp >= sessions.`created`
+        ', 'isi', array(
+        $site_id, $user_id, $session_id
     ));
     if (empty($row))
         return false;
