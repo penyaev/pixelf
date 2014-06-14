@@ -10,6 +10,9 @@ namespace Pixelf\Helpers\Db;
 
 require_once dirname(__FILE__).'/../config/main.php';
 
+$query_log = array();
+$debug_lock = true;
+
 function get_dbh() {
     static $dbh = null;
     if (empty($dbh)) {
@@ -20,8 +23,11 @@ function get_dbh() {
             \Pixelf\Config\get_config_parameter('db_db')
         );
         mysqli_query($dbh, 'SET NAMES utf8');
-//        mysqli_query($dbh, 'SET profiling=1');
-//        mysqli_query($dbh, 'SET profiling_history_size=1');
+        $debug_enabled = \Pixelf\Config\get_config_parameter('db_debug', false);
+        if ($debug_enabled) {
+            mysqli_query($dbh, 'SET profiling=1');
+            mysqli_query($dbh, 'SET profiling_history_size=1');
+        }
     }
     return $dbh;
 }
@@ -85,7 +91,7 @@ function insert($query, $types = null, $params= array()) {
 }
 
 function query($query, $types = null, $params = array()) {
-//    $start = microtime(true);
+    $start = microtime(true);
 
     $result = false;
     if ($types && !empty($params)) {
@@ -105,16 +111,46 @@ function query($query, $types = null, $params = array()) {
         throw new \Exception('MySQL Error: '.mysqli_error(get_dbh()).'. Query was: '.$query);
     }
 
-    // профилирование медленных запросов
-//    $time = microtime(true) - $start;
-//    if ($time > 0.5) {
-//        $query_id = \Pixelf\Helpers\Db\fetch_value('show profiles');
-//        $profile = \Pixelf\Helpers\Db\fetch_all('show profile for query '.$query_id);
-//        $data = array_map(function ($row) {
-//            return $row['Status'].':'."\t".$row['Duration'];
-//        }, $profile);
-//        file_put_contents('/tmp/pf-profile.log', str_repeat('=', 40).PHP_EOL.'Query:'."\t".$query.PHP_EOL.implode("\n", $data).PHP_EOL.str_repeat('=', 40).PHP_EOL, FILE_APPEND);
-//    }
+    $time = microtime(true) - $start;
+    global $debug_lock;
+    $debug_enabled = $debug_lock && \Pixelf\Config\get_config_parameter('db_debug', false);
+    if ($debug_enabled) {
+        $debug_lock = false;
+        global $query_log;
+        $threshold = floatval(\Pixelf\Config\get_config_parameter('db_debug_threshold', 0));
+        if ($time > $threshold) {
+            $query_id = \Pixelf\Helpers\Db\fetch_value('show profiles');
+            $profile = \Pixelf\Helpers\Db\fetch_all('show profile for query '.$query_id);
+            usort($profile, function ($row1, $row2) {
+                $delta = floatval($row1['Duration']) - floatval($row2['Duration']);
+                if (abs($delta) < 0.000001)
+                    return 0;
+                if ($delta > 0)
+                    return -1;
+                return +1;
+            });
+            $query_log []= array(
+                'query' => $query,
+                'params' => $params,
+                'time' => $time,
+                'profiling_info' => $profile,
+            );
+        }
+        $debug_lock = true;
+    }
 
     return $result;
+}
+
+function get_query_log() {
+    global $query_log;
+    usort($query_log, function ($row1, $row2) {
+        $delta = $row1['time'] - $row2['time'];
+        if (abs($delta) < 0.000001)
+            return 0;
+        if ($delta > 0)
+            return -1;
+        return +1;
+    });
+    return $query_log;
 }

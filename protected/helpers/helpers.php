@@ -90,6 +90,10 @@ function render_file($file, $context) {
     $twig->addFunction($create_absolute_url);
 
     $template = $twig->loadTemplate($file);
+
+    $context = array_merge(array(
+        'query_log' => \Pixelf\Helpers\Db\get_query_log(),
+    ), $context);
     echo $template->render($context);
 }
 

@@ -8,6 +8,7 @@
 
 namespace Pixelf\Config;
 
+require_once dirname(__FILE__).'/../helpers/helpers.php';
 
 function config() {
     return array(
@@ -20,12 +21,12 @@ function config() {
         'db_user' => 'root',
         'db_password' => '1234',
         'db_db' => 'pixel',
+
+        'db_debug' => true,
+        'db_debug_threshold' => 0,
     );
 }
 
-function get_config_parameter($parameter) {
-    $config = config();
-    if (isset($config[$parameter]))
-        return $config[$parameter];
-    return null;
+function get_config_parameter($parameter, $default = null) {
+    return \Pixelf\Helpers\get_value(config(), $parameter, $default);
 }

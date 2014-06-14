@@ -96,3 +96,15 @@ table.valign-middle td {
     padding:0;
     margin:0;
 }
+
+.db-query {
+    font-family: monospace;
+    margin-bottom: 10px;
+    background-color: #fafafa;
+    padding:4px;
+    border-radius: 6px;
+}
+
+.db-query-details {
+    display: none;
+}

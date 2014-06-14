@@ -40,6 +40,48 @@
             <footer>
                 <p><a href="https://vk.com/garymoore">Илья Пеняев</a>, 2014</p>
                 <p><span class="glyphicon glyphicon-time"></span> Время обработки запроса сервером: %server_time% мс</p>
+                {% if query_log %}
+                    <hr>
+                    <div class="db-stats">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Запрос</th>
+                                    <th>Время, мс</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for row in query_log %}
+                                    <tr>
+                                        <td>
+                                            <div class="db-query">{{ row['query'] }}</div>
+                                            <a href="#" class="btn btn-xs js-show-query-details"><span class="glyphicon glyphicon-info-sign"></span> Профилирование</a>
+                                            <div class="db-query-details">
+                                                <table class="table">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>Статус</th>
+                                                            <th>Время, мс</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        {% for profile_row in row['profiling_info'] %}
+                                                            <tr>
+                                                                <td>{{ profile_row['Status'] }}</td>
+                                                                <td>{{ profile_row['Duration']*1000 }}</td>
+                                                            </tr>
+                                                        {% endfor %}
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </td>
+                                        <td>{{ (row['time']*1000)|number_format(3) }}</td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                {% endif %}
             </footer>
         </div> <!-- /container -->
 
@@ -51,6 +93,13 @@
             };
         </script>
         <script type="text/javascript" src="{{ get_param('baseUrl') }}js/vendor/jquery-1.11.1.min.js"></script>
+        <script type="text/javascript">
+            $(document).on('click', '.js-show-query-details', function () {
+                $(this).siblings('.db-query-details').slideDown();
+                $(this).slideUp();
+                return false;
+            });
+        </script>
         {% block scripts %}{% endblock %}
     </body>
 </html>
