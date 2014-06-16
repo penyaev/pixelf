@@ -66,7 +66,7 @@ CREATE TABLE `sessions` (
   `finished` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`session_id`),
   KEY `idx_sessions` (`site_id`,`user_id`),
-  KEY `idx_sessions2` (`site_id`,`vk_lead_id`)
+  KEY `idx_sessions2` (`site_id`,`vk_lead_id`,`finished`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 
