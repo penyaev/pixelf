@@ -22,7 +22,7 @@ function get_relative_request_uri($request_uri) {
 }
 
 function get_route($request_uri) {
-    $return = explode('/', $request_uri, 2);
+    $return = explode('/', trim($request_uri, '/'), 2);
     if (!isset($return[1]))
         $return[1] = '';
 
