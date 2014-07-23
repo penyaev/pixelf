@@ -12,7 +12,7 @@ require_once dirname(__FILE__).'/../helpers/db.php';
 function insert($site_id, $url_id, $user_id) {
     return \Pixelf\Helpers\Db\insert('INSERT INTO pixel_log (site_id, url_id, user_id) VALUES (?, ?, ?)', 'iis', array(
         intval($site_id), $url_id, $user_id
-    ));
+    ), true);
 }
 
 function get_clicks_count() {

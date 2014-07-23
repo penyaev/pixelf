@@ -12,7 +12,7 @@ require_once dirname(__FILE__).'/../helpers/db.php';
 function insert($domain, $site_uid, $request_threshold) {
     return \Pixelf\Helpers\Db\insert('INSERT INTO sites (domain, site_uid, request_threshold) VALUES (?, ?, ?)', 'ssi', array(
         $domain, $site_uid, intval($request_threshold)
-    ));
+    ), true);
 }
 
 function select_all($offset=0, $limit = 20) {

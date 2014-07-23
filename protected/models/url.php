@@ -16,7 +16,7 @@ function insert_or_get_id($url) {
     if (empty($url_id)) {
         $url_id = \Pixelf\Helpers\Db\insert('INSERT INTO urls (url_crc, url) VALUES (CRC32(?), ?)', 'ss', array(
             $url, $url
-        ));
+        ), true);
     }
     return $url_id;
 }
