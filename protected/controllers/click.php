@@ -17,16 +17,22 @@ require_once dirname(__FILE__).'/../models/lead.php';
 
 const MAY_2024 = 1716367119; // наступит не скоро
 
+function get_user_id() {
+  $user_id = isset($_GET['pf_user_id']) ? $_GET['pf_user_id'] : null; // оставлено для отладки, в бою надо брать только из кук
+  if (empty($user_id))
+    $user_id = isset($_COOKIE['pf_user_id']) ? $_COOKIE['pf_user_id'] : null;
+  if (empty($user_id)) {
+    $user_id = \Pixelf\models\user\get_unique_user_id();
+    setcookie('pf_user_id', $user_id, MAY_2024);
+  }
+
+  return $user_id;
+}
+
 function action_store() {
     ignore_user_abort(true);
 
-    $user_id = isset($_GET['pf_user_id']) ? $_GET['pf_user_id'] : null; // оставлено для отладки, в бою надо брать только из кук
-    if (empty($user_id))
-        $user_id = isset($_COOKIE['pf_user_id']) ? $_COOKIE['pf_user_id'] : null;
-    if (empty($user_id)) {
-        $user_id = \Pixelf\models\user\get_unique_user_id();
-        setcookie('pf_user_id', $user_id, MAY_2024);
-    }
+    $user_id = get_user_id();
 
     $site_uid = isset($_GET['site_uid']) ? $_GET['site_uid'] : 0;
     $site_id = \Pixelf\models\site\select_id_by_uid($site_uid);
@@ -56,6 +62,40 @@ function action_store() {
             \Pixelf\Helpers\leads\complete_lead($session_id);
         }
     }
+}
+
+function action_start() {
+    $user_id = get_user_id();
+
+    $site_uid = isset($_GET['site_uid']) ? $_GET['site_uid'] : 0;
+    $site_id = \Pixelf\models\site\select_id_by_uid($site_uid);
+    if (empty($site_id)) {
+        header("HTTP/1.0 404 Not found");
+        die;
+    }
+
+    $vk_lead_id = isset($_GET['vk_lead_id']) ? $_GET['vk_lead_id'] : 0;
+    $lead = \Pixelf\Models\lead\get_by_lead_id($vk_lead_id);
+    if (empty($lead)) {
+        header("HTTP/1.0 404 Not found");
+        die;
+    }
+
+    $url = $_SERVER['REQUEST_URI'];
+    $session_id = handle_lead_session($url, $user_id, $site_id); // смотрим на урл: возможно, надо открыть новую сессию
+    if (empty($session_id)) { // если новую сессию не открыли, то, может быть, уже есть открытая
+        $session_id = \Pixelf\Models\lead\get_open_session($user_id, $site_id); // пытаемся получить открытую сессию
+    }
+
+    if (!empty($session_id)) { // если есть открытая сессия
+        $landing_url = $lead['landing_url'];
+        if (!empty($landing_url)) {
+            \Pixelf\Helpers\redirect_absolute($landing_url);
+        }
+    }
+
+    header("HTTP/1.0 404 Not found");
+    die;
 }
 
 function handle_lead_session($url, $user_id, $site_id) {

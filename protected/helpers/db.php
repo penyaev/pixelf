@@ -85,8 +85,17 @@ function last_insert_id() {
     return mysqli_insert_id(get_dbh());
 }
 
-function insert($query, $types = null, $params= array()) {
+function insert($query, $types = null, $params= array(), $disable_debug = false) {
+    global $debug_lock;
+    $old_debug_lock = $debug_lock;
+
+    if ($disable_debug) {
+        $debug_lock = false;
+    }
+
     query($query, $types, $params);
+    $debug_lock = $old_debug_lock;
+
     return last_insert_id();
 }
 

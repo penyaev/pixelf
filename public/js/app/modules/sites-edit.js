@@ -11,7 +11,8 @@ Pixelf.Modules.SitesEdit = (function () {
             group_id: $('.vk-lead').length,
             caption: '',
             vk_lead_id: null,
-            secret: null
+            secret: null,
+            landing_url: null
         }, model))).hide();
 
         $('.leads').append($newLead);

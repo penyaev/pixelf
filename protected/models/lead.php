@@ -9,13 +9,13 @@
 namespace Pixelf\Models\lead;
 require_once dirname(__FILE__).'/../helpers/db.php';
 
-function insert_or_update($caption, $vk_lead_id, $secret, $site_id) {
+function insert_or_update($caption, $vk_lead_id, $secret, $site_id, $landing_url = null) {
     \Pixelf\Helpers\Db\query('
-        INSERT INTO leads (vk_lead_id, site_id, caption, secret) VALUES (?, ?, ?, ?)
-        ON DUPLICATE KEY UPDATE site_id=?, caption=?, secret=?
-    ', 'iississ', array(
-        $vk_lead_id, $site_id, $caption, $secret,
-        $site_id, $caption, $secret
+        INSERT INTO leads (vk_lead_id, site_id, caption, secret, landing_url) VALUES (?, ?, ?, ?, ?)
+        ON DUPLICATE KEY UPDATE site_id=?, caption=?, secret=?, landing_url=?
+    ', 'iisssisss', array(
+        $vk_lead_id, $site_id, $caption, $secret, $landing_url,
+        $site_id, $caption, $secret, $landing_url,
     ));
     return \Pixelf\Helpers\Db\last_insert_id();
 }
@@ -45,7 +45,7 @@ function insert_session($vk_sid, $vk_lead_id, $vk_uid, $user_id, $site_id) {
         VALUES                  (?,         ?,          ?,      ?,          ?)
         ', implode('', array(   's',        'i',        'i',    's',        'i')), array(
                                 $vk_sid,    $vk_lead_id,$vk_uid,$user_id,   $site_id
-    ));
+    ), true);
 }
 
 function get_open_session($user_id, $site_id) {

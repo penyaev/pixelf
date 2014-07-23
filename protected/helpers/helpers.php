@@ -65,6 +65,12 @@ function redirect($route, $params = array(), $terminate = true) {
         die;
 }
 
+function redirect_absolute($url, $terminate = true) {
+    header('Location: '.$url);
+    if ($terminate)
+        die;
+}
+
 function render_file($file, $context) {
     require_once dirname(__FILE__).'/../../lib/Twig/Autoloader.php';
     \Twig_Autoloader::register();

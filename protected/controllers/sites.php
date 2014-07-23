@@ -59,7 +59,7 @@ function action_edit() {
         $existing_leads = array_keys(\Pixelf\Models\lead\get_by_site_id($_POST['site_id']));
         $saved_leads = array();
         foreach($leads as $lead_info) {
-            $lead_id = \Pixelf\Models\lead\insert_or_update($lead_info['caption'], $lead_info['id'], $lead_info['secret'], $_POST['site_id']);
+            $lead_id = \Pixelf\Models\lead\insert_or_update($lead_info['caption'], $lead_info['id'], $lead_info['secret'], $_POST['site_id'], $lead_info['landing_url']);
             if (empty($lead_id)) {
                 $saved_leads []= intval($lead_info['id']);
             } else {
