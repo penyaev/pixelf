@@ -74,7 +74,10 @@ function action_edit() {
         \Pixelf\Helpers\redirect('sites/view', array('site_id' => $_POST['site_id']));
     }
 
-    $leads = \Pixelf\Models\lead\get_by_site_id(intval($site['site_id']));
+    if (isset($site['site_id']))
+        $leads = \Pixelf\Models\lead\get_by_site_id(intval($site['site_id']));
+    else
+        $leads = array();
     render('edit', array(
         'site' => $site,
         'leads' => $leads,
