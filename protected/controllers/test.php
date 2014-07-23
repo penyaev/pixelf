@@ -123,3 +123,13 @@ function action_watch_tw() {
         usleep(6000);
     }
 }
+
+function action_complete() {
+    render('complete', array(
+        
+    ));
+}
+
+function render($view, $data = array()) {
+    \Pixelf\Helpers\render_file('test/'.$view.'.twig', $data);
+}

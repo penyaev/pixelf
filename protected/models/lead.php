@@ -54,7 +54,7 @@ function get_open_session($user_id, $site_id) {
         WHERE site_id=? AND user_id=? AND finished IS NULL
         ORDER BY created DESC
         LIMIT 1
-    ', 'si', array($user_id, $site_id));
+    ', 'is', array($site_id, $user_id));
 }
 
 function close_session($session_id) {

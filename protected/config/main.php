@@ -22,7 +22,7 @@ function config() {
         'db_password' => '1234',
         'db_db' => 'pixel',
 
-        'db_debug' => true,
+        'db_debug' => false,
         'db_debug_threshold' => 0,
     );
 }
