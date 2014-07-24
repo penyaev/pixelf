@@ -32,6 +32,10 @@ function get_by_lead_id($lead_id) {
     return \Pixelf\Helpers\Db\fetch_one('SELECT * FROM leads WHERE vk_lead_id=? LIMIT 1', 'i', array($lead_id));
 }
 
+function get_by_lead_id_and_site_id($lead_id, $site_id) {
+    return \Pixelf\Helpers\Db\fetch_one('SELECT * FROM leads WHERE vk_lead_id=? AND site_id=? LIMIT 1', 'ii', array($lead_id, $site_id));
+}
+
 function delete_by_ids(array $vk_lead_ids) {
     $vk_lead_ids = array_map('intval', $vk_lead_ids);
     return \Pixelf\Helpers\Db\query('

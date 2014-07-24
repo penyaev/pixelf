@@ -75,7 +75,7 @@ function action_start() {
     }
 
     $vk_lead_id = isset($_GET['vk_lead_id']) ? $_GET['vk_lead_id'] : 0;
-    $lead = \Pixelf\Models\lead\get_by_lead_id($vk_lead_id);
+    $lead = \Pixelf\Models\lead\get_by_lead_id_and_site_id($vk_lead_id, $site_id);
     if (empty($lead)) {
         header("HTTP/1.0 404 Not found");
         die;
@@ -87,11 +87,9 @@ function action_start() {
         $session_id = \Pixelf\Models\lead\get_open_session($user_id, $site_id); // пытаемся получить открытую сессию
     }
 
-    if (!empty($session_id)) { // если есть открытая сессия
-        $landing_url = $lead['landing_url'];
-        if (!empty($landing_url)) {
-            \Pixelf\Helpers\redirect_absolute($landing_url);
-        }
+    $landing_url = $lead['landing_url'];
+    if (!empty($landing_url)) {
+        \Pixelf\Helpers\redirect_absolute($landing_url);
     }
 
     header("HTTP/1.0 404 Not found");
@@ -111,7 +109,7 @@ function handle_lead_session($url, $user_id, $site_id) {
     $vk_uid = \Pixelf\Helpers\get_value($url_variables, 'vk_uid');
     $vk_hash = \Pixelf\Helpers\get_value($url_variables, 'vk_hash');
 
-    $lead = \Pixelf\Models\lead\get_by_lead_id($vk_lead_id);
+    $lead = \Pixelf\Models\lead\get_by_lead_id_and_site_id($vk_lead_id, $site_id);
     if (empty($lead))
         return false;
 
