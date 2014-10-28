@@ -16,7 +16,7 @@ function complete_lead($session_id) {
     $session = \Pixelf\Models\lead\get_session_by_session_id($session_id);
     if (empty($session))
         return false;
-    $lead = \Pixelf\Models\lead\get_by_lead_id(\Pixelf\Helpers\get_value($session, 'vk_lead_id'));
+    $lead = \Pixelf\Models\lead\get_by_lead_id(\Pixelf\Helpers\get_value($session, 'lead_id'));
     if (empty($lead))
         return false;
 
