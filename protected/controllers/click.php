@@ -67,19 +67,25 @@ function action_store() {
 function action_start() {
     $user_id = get_user_id();
 
-    $site_uid = isset($_GET['site_uid']) ? $_GET['site_uid'] : 0;
-    $site_id = \Pixelf\models\site\select_id_by_uid($site_uid);
-    if (empty($site_id)) {
-        header("HTTP/1.0 404 Not found");
-        die;
-    }
+    $lead_id = isset($_GET['lead_id']) ? $_GET['lead_id'] : 0;
+    $lead = \Pixelf\Models\lead\get_by_lead_id($lead_id);
+    if (empty($lead)) {
+        $site_uid = isset($_GET['site_uid']) ? $_GET['site_uid'] : 0;
+        $site_id = \Pixelf\models\site\select_id_by_uid($site_uid);
+        if (empty($site_id)) {
+            header("HTTP/1.0 404 Not found");
+            die;
+        }
 
-    $vk_lead_id = isset($_GET['vk_lead_id']) ? $_GET['vk_lead_id'] : 0;
-    $lead = \Pixelf\Models\lead\get_by_lead_id_and_site_id($vk_lead_id, $site_id);
+        $vk_lead_id = isset($_GET['vk_lead_id']) ? $_GET['vk_lead_id'] : 0;
+        $lead = \Pixelf\Models\lead\get_by_vk_lead_id_and_site_id($vk_lead_id, $site_id);
+    }
     if (empty($lead)) {
         header("HTTP/1.0 404 Not found");
         die;
     }
+
+    $site_id = $lead['site_id'];
 
     $url = $_SERVER['REQUEST_URI'];
     $session_id = handle_lead_session($url, $user_id, $site_id); // смотрим на урл: возможно, надо открыть новую сессию
@@ -109,14 +115,14 @@ function handle_lead_session($url, $user_id, $site_id) {
     $vk_uid = \Pixelf\Helpers\get_value($url_variables, 'vk_uid');
     $vk_hash = \Pixelf\Helpers\get_value($url_variables, 'vk_hash');
 
-    $lead = \Pixelf\Models\lead\get_by_lead_id_and_site_id($vk_lead_id, $site_id);
+    $lead = \Pixelf\Models\lead\get_by_vk_lead_id_and_site_id($vk_lead_id, $site_id);
     if (empty($lead))
         return false;
 
     if (!\Pixelf\Helpers\leads\validate_hash($vk_hash, $vk_sid, $vk_lead_id, $vk_uid, $lead['secret']))
         return false;
 
-    $session_id = \Pixelf\Models\lead\insert_session($vk_sid, $vk_lead_id, $vk_uid, $user_id, $site_id);
+    $session_id = \Pixelf\Models\lead\insert_session($vk_sid, $lead['lead_id'], $vk_uid, $user_id, $site_id);
 
     if (!empty($session_id))
         return $session_id;

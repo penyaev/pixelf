@@ -54,21 +54,23 @@ function create_url($route, $params = array()) {
     return $url;
 }
 
-function create_absolute_url($route, $params = array()) {
+function create_absolute_url($route, $params = array(), $include_schema = false) {
     $host = isset($_SERVER['HTTP_HOST']) ? $_SERVER['HTTP_HOST'] : '';
-    return '//'.$host.create_url($route, $params);
+    return ($include_schema ? 'http:' : '').'//'.$host.create_url($route, $params);
 }
 
 function redirect($route, $params = array(), $terminate = true) {
     header('Location: '.create_url($route, $params));
-    if ($terminate)
+    if ($terminate) {
         die;
+    }
 }
 
 function redirect_absolute($url, $terminate = true) {
     header('Location: '.$url);
-    if ($terminate)
+    if ($terminate) {
         die;
+    }
 }
 
 function render_file($file, $context) {
@@ -90,8 +92,8 @@ function render_file($file, $context) {
     });
     $twig->addFunction($create_url);
 
-    $create_absolute_url = new \Twig_SimpleFunction('create_absolute_url', function ($route, $params = array()) {
-        return create_absolute_url($route, $params);
+    $create_absolute_url = new \Twig_SimpleFunction('create_absolute_url', function ($route, $params = array(), $include_schema = false) {
+        return create_absolute_url($route, $params, $include_schema);
     });
     $twig->addFunction($create_absolute_url);
 

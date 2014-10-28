@@ -53,15 +53,17 @@
                     <th>Заголовок</th>
                     <th>Всего сессий</th>
                     <th>Успешных</th>
+                    <th width="1%"></th>
                 </tr>
             </thead>
             <tbody>
                 {% for lead in leads %}
                     <tr>
-                        <td>{{ lead['vk_lead_id'] }}</td>
+                        <td>{{ lead['vk_lead_id'] | default('&mdash;') | raw }}</td>
                         <td>{{ lead['caption'] }}</td>
-                        <td>{{ sessions_stats[lead['vk_lead_id']]['sessions_total']|default(0) }}</td>
-                        <td>{{ sessions_stats[lead['vk_lead_id']]['sessions_finished']|default(0) }}</td>
+                        <td>{{ sessions_stats[lead['lead_id']]['sessions_total']|default(0) }}</td>
+                        <td>{{ sessions_stats[lead['lead_id']]['sessions_finished']|default(0) }}</td>
+                        <td><nobr><a href="#" class="btn-xs js-show-offer-link" data-lead-id="{{ lead['lead_id'] }}"><span class="glyphicon glyphicon-link"></span> Ссылка на начало сессии</a></nobr></td>
                     </tr>
                 {% endfor %}
             </tbody>
@@ -79,9 +81,26 @@
     <script type="text/javascript" src="{{ get_param('baseUrl') }}js/vendor/d3.v2.js"></script>
     <script type="text/javascript" src="{{ get_param('baseUrl') }}js/vendor/cubism.v1.js"></script>
     <script type="text/javascript" src="{{ get_param('baseUrl') }}js/app/realtime-graphs.js"></script>
+    <script type="text/javascript" src="{{ get_param('baseUrl') }}js/vendor/bootstrap.min.js"></script>
     <script type="text/javascript">
-        $(document).ready(function () {
-            realtimeGraphs.init([{{ site['site_id'] }}], '{{ create_url('sites/stats') }}', $('.realtime-graph').width());
-        });
+        $(document)
+            .ready(function () {
+                realtimeGraphs.init([{{ site['site_id'] }}], '{{ create_url('sites/stats') }}', $('.realtime-graph').width());
+            })
+            .on('click', '.js-show-offer-link', function () {
+                var lead_id = $(this).attr('data-lead-id');
+                var $this = $(this);
+                var url = '{{ create_absolute_url('click/start', {lead_id: ''}, true) }}' + lead_id;
+                $this.popover({
+                    content: '<a href="' + url + '">' + url + '</a>',
+                    html: true,
+                    placement: 'top',
+                    container: 'body'
+                }).popover('show');
+                setTimeout(function () {
+                    $this.popover('hide');
+                }, 7000);
+                return false;
+            });
     </script>
 {% endblock %}

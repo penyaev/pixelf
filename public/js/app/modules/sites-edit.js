@@ -11,6 +11,7 @@ Pixelf.Modules.SitesEdit = (function () {
             group_id: $('.vk-lead').length,
             caption: '',
             vk_lead_id: null,
+            lead_id: null,
             secret: null,
             landing_url: null
         }, model))).hide();
@@ -45,7 +46,7 @@ Pixelf.Modules.SitesEdit = (function () {
         });
         duplicate_ids = _.uniq(duplicate_ids);
         if (duplicate_ids.length) {
-            $('.js-alert').text('Вы указали одинаковы'+((duplicate_ids.length > 1) ? 'е' : 'й')+' vk_lead_id ' + duplicate_ids.join(', ') + ' для нескольких разных офферов').slideDown();
+            $('.js-alert').text('Вы указали одинаковы' + ((duplicate_ids.length > 1) ? 'е' : 'й') + ' vk_lead_id ' + duplicate_ids.join(', ') + ' для нескольких разных офферов').slideDown();
         } else {
             $('.js-alert').slideUp();
         }
