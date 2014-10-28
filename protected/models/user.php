@@ -101,7 +101,7 @@ function is_goal_reached($user_id, $site_id, $session_id) {
             JOIN sites ON sites.site_id=pixel_log.site_id
             JOIN sessions ON sessions.`session_id`=?
             WHERE pixel_log.site_id=? AND pixel_log.user_id=? AND timestamp >= sessions.`created`
-        ', 'isi', array(
+        ', 'iis', array(
         $site_id, $user_id, $session_id
     ));
     if (empty($row))
